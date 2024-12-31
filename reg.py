@@ -12,7 +12,7 @@ def hash_password(password):
 
 # Encrypt biometric data using ChaCha20
 def encrypt_data(data, key):
-    nonce = os.urandom(12)  # 96-bit nonce
+    nonce = os.urandom(16)  # 96-bit nonce
     cipher = Cipher(algorithms.ChaCha20(key, nonce), mode=None, backend=default_backend())
     encryptor = cipher.encryptor()
     ciphertext = encryptor.update(data) + encryptor.finalize()

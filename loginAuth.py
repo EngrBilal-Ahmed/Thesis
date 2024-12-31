@@ -1,3 +1,5 @@
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms
 def decrypt_data(ciphertext, key, nonce):
     cipher = Cipher(algorithms.ChaCha20(key, nonce), mode=None, backend=default_backend())
     decryptor = cipher.decryptor()

@@ -1,3 +1,5 @@
+from cryptography.hazmat.backends import default_backend
+
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -9,4 +11,4 @@ def authenticate():
     return jsonify({"status": "success", "message": "User authenticated"})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="127.0.0.1", port=5000)
