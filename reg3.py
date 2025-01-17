@@ -6,6 +6,7 @@ from cryptography.hazmat.primitives.hashes import SHA256  # Secure hashing algor
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC  # Password-based key derivation function to protect against brute-force attacks
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes  # Used for encryption and decryption with AES in GCM mode
 import base64  # Used to encode and decode binary data to/from base64 for secure transmission
+import time  # Used to handle login attempt timing
 
 # -------------------------------
 # Utility Functions
@@ -49,8 +50,6 @@ def decrypt_data(encrypted_data, key):
 # -------------------------------
 # Phase 1: Registration Phase
 # -------------------------------
-# User registration function that stores the hashed password and biometric data along with a salt
-# This phase ensures that user credentials are securely stored in the database
 def register_user(user_id, password, biometric_data):
     salt = generate_salt()
     hashed_password = hash_data(password, salt)
@@ -58,7 +57,9 @@ def register_user(user_id, password, biometric_data):
     user_db[user_id] = {
         "salt": salt,
         "hashed_password": hashed_password,
-        "hashed_biometric": hashed_biometric
+        "hashed_biometric": hashed_biometric,
+        "failed_attempts": 0,  # Track the number of failed login attempts
+        "last_attempt_time": None  # Track the time of the last login attempt
     }
     print(f"User {user_id} registered successfully!")
 
@@ -72,18 +73,34 @@ def login_user(user_id, password, biometric_data):
         print("User ID not found.")
         return False
 
-    salt = user_db[user_id]["salt"]
-    expected_hashed_password = user_db[user_id]["hashed_password"]
+    user_record = user_db[user_id]
+    current_time = time.time()
+
+    # Check for too many failed attempts
+    if user_record["failed_attempts"] >= 3:
+        time_since_last_attempt = current_time - user_record["last_attempt_time"]
+        if time_since_last_attempt < 60:  # Lock the account for 60 seconds after 3 failed attempts
+            print("Account is temporarily locked due to multiple failed login attempts. Please try again later.")
+            return False
+        else:
+            # Reset failed attempts after lockout period
+            user_record["failed_attempts"] = 0
+
+    salt = user_record["salt"]
+    expected_hashed_password = user_record["hashed_password"]
     provided_hashed_password = hash_data(password, salt)
 
-    expected_hashed_biometric = user_db[user_id]["hashed_biometric"]
+    expected_hashed_biometric = user_record["hashed_biometric"]
     provided_hashed_biometric = hash_data(biometric_data, salt)
 
     if provided_hashed_password == expected_hashed_password and provided_hashed_biometric == provided_hashed_biometric:
         print("Login successful!")
+        user_record["failed_attempts"] = 0  # Reset failed attempts on successful login
         return True
     else:
         print("Login failed. Incorrect credentials.")
+        user_record["failed_attempts"] += 1
+        user_record["last_attempt_time"] = current_time
         return False
 
 # -------------------------------
@@ -111,7 +128,7 @@ class DiffieHellman:
 # It allows testing of the different phases (registration, login, and key agreement) without requiring an external caller.
 # The code in this block will not run if the file is imported as a module in another script.
 if __name__ == "__main__":
-    user_db = {}  # In-memory user database
+    user_db = {}
 
     # Registration Phase
     register_user("user1", "password123", "biometric_sample")
