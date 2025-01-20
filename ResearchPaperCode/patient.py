@@ -1,7 +1,7 @@
 import hashlib  # For generating secure hashes of data
 import random  # For generating random values like r1, r2 used in biometric verification
-from trusted_server import registration  # Import the registration function from the trusted server
-from medical_server import medical_server_authentication  # Import the authentication function from the medical server
+#from trusted_server import registration  # Import the registration function from the trusted server
+#from medical_server import medical_server_authentication  # Import the authentication function from the medical server
 import time  # For simulating real-time delays in processing
 
 
@@ -44,6 +44,24 @@ def generate_random():
     return random.randint(1, 100000)
 
 
+# Simulating a user database with login attempts
+users_db = {
+    "patient1": {
+        "password": simple_hash("password123"),  # Hashed password
+        "biometric_data": "biometric_template_data",  # Simulated biometric data
+        "login_attempts": 0  # Track login attempts
+    },
+    "patient2": {
+        "password": simple_hash("password123"),
+        "biometric_data": "another_biometric_template_data",
+        "login_attempts": 0
+    }
+}
+
+# Max login attempts before account is locked
+MAX_LOGIN_ATTEMPTS = 3
+
+
 # Patient Login Phase - Login & Authentication using Hamming Distance
 def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased threshold for Hamming distance tolerance
     """
@@ -62,6 +80,11 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
     Returns:
     str: The authentication message (Authut) if successful, or None if authentication fails.
     """
+    # Check if the user has exceeded the max login attempts
+    if users_db[IDi]["login_attempts"] >= MAX_LOGIN_ATTEMPTS:
+        print(f"Account locked due to too many failed login attempts for user: {IDi}")
+        return None  # Account locked, do not proceed
+
     print("\nLogin Phase:")
 
     # Step 1: Process biometric data to get a hash (convert to binary)
@@ -95,6 +118,8 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
     # If the Hamming distance is above the threshold, consider the match failed
     if dist == -1 or dist > threshold:
         print(f"Biometric check failed. Hamming distance: {dist}")
+        users_db[IDi]["login_attempts"] += 1  # Increment the login attempt counter for failed attempt
+        print(f"Login attempts for {IDi}: {users_db[IDi]['login_attempts']}")
         return None  # Return None if the biometric check fails
 
     print(f"Biometric check passed. Hamming distance: {dist}")
@@ -105,6 +130,7 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
 
     # Generate authentication information
     m = generate_random()  # Random integer for session key generation
+    print(f"Generated random number in Patient (m): {m}")
     Ai = simple_hash(IDi + str(m) + "IDm") + P  # Combining the random integer and the patient ID
     X1 = simple_hash(IDi + smart_card["Cut"] + Ai) + str(m)  # Final authentication information
 
@@ -119,6 +145,9 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
     Authut = simple_hash(f"{smart_card['Ni']}{IDi}{smart_card['Cut']}")
 
     print(f"Authentication Message (Authut): {Authut}")
+
+    # Reset login attempts after successful authentication
+    users_db[IDi]["login_attempts"] = 0  # Reset the login attempt counter after a successful login
     return Authut  # Return the authentication message (Authut)
 
 

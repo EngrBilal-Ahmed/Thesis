@@ -1,6 +1,9 @@
 import hashlib  # For generating hashes of data
 import random  # For generating random numbers for masking
+from flask import Flask, request, jsonify  # For creating a Flask web server
 
+# Initialize Flask app
+app = Flask(__name__)
 
 # Simple hash function using hashlib for generating SHA256 hashes
 def simple_hash(data):
@@ -11,7 +14,6 @@ def simple_hash(data):
     """
     return hashlib.sha256(data.encode()).hexdigest()
 
-
 # Random number generator for creating random integers
 def generate_random():
     """
@@ -21,10 +23,28 @@ def generate_random():
     """
     return random.randint(1, 100000)
 
+# Simulating a database of users
+users_db = {
+    "patient1": {
+        "password": simple_hash("password123"),  # Hashed password
+        "biometric_data": "biometric_template_data",  # Simulated biometric data
+        "login_attempts": 0  # Track login attempts
+    },
+    "patient2": {
+        "password": simple_hash("password123"),
+        "biometric_data": "another_biometric_template_data",
+        "login_attempts": 0
+    }
+}
 
 # Trusted Server - Registration Phase
-def registration(IDi, pwi, biometric_data):
+@app.route('/register', methods=['POST'])
+def registration(): #IDi, pwi, biometric_data):
     """
+    Endpoint for registering a new patient. It receives patient details from the client (patient system),
+    hashes the password and biometric data, and generates the smart card data to be used in the login phase.
+
+    Incase without the flask app, the function can be called as:
     This function simulates the registration phase on the trusted server.
     It takes the patient's identity (IDi), password (pwi), and biometric data as input,
     performs various cryptographic operations to generate the smart card data, and returns it.
@@ -33,8 +53,15 @@ def registration(IDi, pwi, biometric_data):
     a smart card containing encrypted data.
     """
 
+    # Get input data from the POST request
+    data = request.get_json()
+    IDi = data.get("IDi")
+    pwi = data.get("pwi")
+    biometric_data = data.get("biometric_data")
+
     # Step 1: Generate a random number (r1) for masking the biometric data
     r1 = generate_random()  # Random number for masking biometric data
+    print("Random number (r1) for biometric data masking in TS:", r1)
 
     # Step 2: Hash the biometric data
     hbio_result = simple_hash(biometric_data)  # Simulate biohashing (hashed biometric data)
@@ -54,7 +81,9 @@ def registration(IDi, pwi, biometric_data):
     # Step 7: Generate another random number (r2) for encryption purposes
     r2 = generate_random()  # Generate another random number for masking
 
-    # Step 8: Create the trusted server ID and generate the Cut value (encryption simulation)
+    print("Random number (r2) for smart card generation in TS:", r2)
+
+# Step 8: Create the trusted server ID and generate the Cut value (encryption simulation)
     M1 = IDi + "IDt"  # Combining patient ID with trusted server ID for masking
     Cut = simple_hash(M1 + str(r2) + P)  # Encrypted data (simulated encryption) to generate Cut
 
@@ -71,3 +100,18 @@ def registration(IDi, pwi, biometric_data):
 
     # Return the smart card data to be used in the login phase later
     return smart_card
+
+# Function to reset login attempts after a successful login
+def reset_login_attempts(IDi):
+    """
+    Resets the login attempts counter for a user after a successful login.
+    """
+    if IDi in users_db:
+        users_db[IDi]["login_attempts"] = 0
+        print(f"Login attempts for {IDi} have been reset.")
+
+# Start the Flask application
+if __name__ == '__main__':
+    # Run the Flask app on localhost at port 5000
+    app.run(host='127.0.0.1', port=5000, debug=True)
+#     main()  # Start the simulation
