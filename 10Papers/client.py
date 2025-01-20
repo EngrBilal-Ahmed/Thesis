@@ -29,7 +29,7 @@ def authenticate_user(username, password, smart_card, biometric):
     try:
         # Send a POST request to the server at the /authenticate endpoint
         # The user_data dictionary is automatically converted to JSON format by the requests library
-        response = requests.post("http://192.168.100.43:5000/authenticate", json=user_data)
+        response = requests.post("http://127.0.0.1:5000/authenticate", json=user_data)
 
         # Check the HTTP status code of the server's response
         if response.status_code == 200:
@@ -77,7 +77,7 @@ def login_user(username, password):
 
     try:
         # Send a POST request to the server at the /login endpoint
-        response = requests.post("http://192.168.100.43:5000/login", json=login_data)
+        response = requests.post("http://127.0.0.1:5000/login", json=login_data)
 
         # Check the HTTP status code of the server's response
         if response.status_code == 200:
@@ -123,7 +123,7 @@ def register_user(username, password, smart_card, biometric):
 
     try:
         # Send a POST request to the server at the /register endpoint
-        response = requests.post("http://192.168.100.43:5000/register", json=user_data)
+        response = requests.post("http://127.0.0.1:5000/register", json=user_data)
 
         # Check the HTTP status code of the server's response
         if response.status_code == 201:
@@ -150,8 +150,8 @@ if __name__ == "__main__":
     # Example user credentials for testing
     username = "john_doe"
     password = "securePassword123"
-    smart_card = "MIIBIjANBgkqh...<RSA Public Key>"  # Simulated smart card public key
-    biometric = "biometric_data_sample"  # Simulated biometric data
+    smart_card = "A1B2C3D4E5F6070809A0B1C2D3E4F5A6B7C8D9E0F1A2B3C4D5E6F7"  # Simulated smart card public key
+    biometric = "eNq8V8+0JhI0dQsS9bMIghLMwkcGcHF8yTmf68Pb6wQ="  # Simulated biometric data
 
     print("---- Registration ----")
     register_user(username, password, smart_card, biometric)  # Register a new user

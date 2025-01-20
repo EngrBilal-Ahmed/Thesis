@@ -3,7 +3,8 @@ from flask import Flask, request, jsonify  # Flask for creating the web server a
 import bcrypt  # bcrypt for password hashing and secure password verification
 from Crypto.Cipher import AES  # AES from pycryptodome for lightweight encryption and decryption
 from Crypto.Random import get_random_bytes  # Random byte generator for generating encryption keys
-from fuzzyextractor import FuzzyExtractor  # For privacy-preserving biometric data verification
+from fuzzyextractor import FuzzyExtractor
+#from fuzzyextractor import FuzzyExtractor  # For privacy-preserving biometric data verification
 import time  # Time module to track timestamps for brute force prevention
 
 # Initialize Flask application
@@ -199,8 +200,19 @@ def authenticate():
     if smart_card != stored_data['smart_card']:
         return jsonify({"message": "Smart card mismatch"}), 400
 
-    extractor = FuzzyExtractor()
-    if not extractor.verify(biometric, stored_data['biometric']):
+
+    extractor = FuzzyExtractor(16, 8)
+    extracted_biometric = extractor.reproduce(biometric)
+    extracted_stored_biometric = extractor.reproduce(stored_data['biometric'])
+
+    def compare_biometrics(biometric1, biometric2):
+        # Implement the comparison logic
+        # For example, if you're using a Hamming distance:
+        # return hamming_distance(biometric1, biometric2) < threshold
+        return biometric1 == biometric2  # Replace with actual comparison logic
+
+    if not compare_biometrics(extracted_biometric, extracted_stored_biometric):
+    #if not extractor.verify(biometric, stored_data['biometric']):
         return jsonify({"message": "Biometric mismatch"}), 400
 
     # Generate a shared session key
@@ -211,4 +223,4 @@ def authenticate():
 
 # Run the Flask application
 if __name__ == "__main__":
-    app.run(debug=True, host="192.168.100.43", port=5000)
+    app.run(debug=True, host="127.0.0.1", port=5000)
