@@ -3,6 +3,7 @@ import random  # For generating random values like r1, r2 used in biometric veri
 #from trusted_server import registration  # Import the registration function from the trusted server
 #from medical_server import medical_server_authentication  # Import the authentication function from the medical server
 import time  # For simulating real-time delays in processing
+import requests
 
 
 # Simple hash function using hashlib for SHA256 hashing
@@ -155,25 +156,50 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
 def main():
     """
     This is the main function that simulates the registration, login, and authentication phases.
-    It calls the registration function on the trusted server, then performs the login process,
-    and finally validates the authentication with the medical server.
+    It calls the trusted server for registration, then performs the login process, and finally
+    sends the Authut to the medical server for verification.
     """
-    # Simulate patient registration with trusted server
-    IDi = "patient2"
+    # Patient's credentials and biometric data
+    IDi = "patient1"
     pwi = "password123"
     biometric_data = "biometric_template_data"  # Placeholder for the biometric template
 
-    # Step 1: Registration
-    smart_card = registration(IDi, pwi, biometric_data)  # Register the patient and get the smart card
+    # Step 1: Registration with the Trusted Server
+    print("\nContacting the Trusted Server for Registration...")
+    registration_url = "http://127.0.0.1:5000/register"  # Trusted server's registration endpoint
+    registration_data = {
+        "IDi": IDi,
+        "pwi": pwi,
+        "biometric_data": biometric_data
+    }
+    response = requests.post(registration_url, json=registration_data)
+    if response.status_code != 200:
+        print(f"Failed to register: {response.text}")
+        return
+    smart_card = response.json()  # Receive smart card data from the trusted server
+    print("Smart Card Data received:", smart_card)
 
-    # Step 2: Login (Patient provides ID, password, and biometric data)
-    Authut = login(IDi, pwi, biometric_data, smart_card, threshold=200)  # Perform login and biometric check
-    if Authut:
-        # Step 3: Medical Server Authentication
-        print("\nAuthentication Phase:")
-        SKtm = medical_server_authentication(IDi, smart_card, Authut)  # Authenticate with the medical server
-        print(f"Session Key Shared: {SKtm}")  # Print the session key if authentication is successful
+    # Step 2: Login Process
+    print("\nStarting the Login Phase...")
+    Authut = login(IDi, pwi, biometric_data, smart_card)
+    if not Authut:
+        print("Login failed.")
+        return
 
+    # Step 3: Authentication with the Medical Server
+    print("\nContacting the Medical Server for Authentication...")
+    authentication_url = "http://127.0.0.1:5001/authenticate"  # Medical server's authentication endpoint
+    authentication_data = {
+        "Authut": Authut,
+        "smart_card": smart_card,
+        "IDi": IDi
+    }
+    response = requests.post(authentication_url, json=authentication_data)
+    if response.status_code == 200:
+        session_key = response.json().get("session_key")
+        print(f"Authentication successful. Session Key: {session_key}")
+    else:
+        print(f"Authentication failed: {response.text}")
 
 # Start the simulation when the script is executed
 if __name__ == "__main__":

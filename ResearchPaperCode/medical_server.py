@@ -1,6 +1,6 @@
 import hashlib  # For generating cryptographic hashes
 import random  # For generating random values used in session creation
-from flask import Flask, jsonify  # For creating a Flask web server
+from flask import Flask, request, jsonify  # For creating a Flask web server
 
 # Initialize Flask app
 app = Flask(__name__)
