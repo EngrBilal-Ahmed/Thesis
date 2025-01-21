@@ -136,7 +136,6 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
     dist = hamming_distance(stored_bir_binary, input_bio_binary)  # Calculate the Hamming distance
 
     # If the Hamming distance is above the threshold, consider the match failed
-
     # Log the biometric verification time
     print(f"Biometric processing time: {time.time() - start_time:.6f} seconds")
 
