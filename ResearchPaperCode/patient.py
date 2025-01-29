@@ -119,8 +119,8 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
         format(ord(c), '08b') for c in hbio_result)  # Convert inputted biometric to binary string
 
     # Print lengths of the binary strings for debugging purposes
-    print(f"Stored Biometric (Hex): {stored_bir_binary.hex()}")
-    print(f"Input Biometric (Hex): {input_bio_binary.hex()}")
+    print(f"Stored Biometric (Hex): {stored_bir_binary.encode().hex()}")
+    print(f"Input Biometric (Hex): {input_bio_binary.encode().hex()}")
     print(f"Length of stored binary: {len(stored_bir_binary)}")
     print(f"Length of input binary: {len(input_bio_binary)}")
 
@@ -129,8 +129,8 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
     stored_bir_binary = stored_bir_binary.zfill(max_len)  # Pad with leading zeros if needed
     input_bio_binary = input_bio_binary.zfill(max_len)  # Pad input data to match length
 
-    print(f"Stored Biometric (Padded): {stored_bir_binary.hex()}")
-    print(f"Input Biometric (Padded): {input_bio_binary.hex()}")
+    print(f"Stored Biometric (Padded): {stored_bir_binary.encode().hex()}")
+    print(f"Input Biometric (Padded): {input_bio_binary.encode().hex()}")
 
     # Step 4: Calculate Hamming Distance
     dist = hamming_distance(stored_bir_binary, input_bio_binary)  # Calculate the Hamming distance
