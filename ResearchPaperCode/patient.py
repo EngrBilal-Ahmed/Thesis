@@ -119,8 +119,8 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):  # Increased thr
         format(ord(c), '08b') for c in hbio_result)  # Convert inputted biometric to binary string
 
     # Print lengths of the binary strings for debugging purposes
-    print(f"Stored Biometric (Hex): {Bir}")
-    print(f"Input Biometric (Hex): {hbio_result}")
+    print(f"Stored Biometric (Binary): {stored_bir_binary}")
+    print(f"Input Biometric (Binary): {input_bio_binary}")
     print(f"Length of stored binary: {len(stored_bir_binary)}")
     print(f"Length of input binary: {len(input_bio_binary)}")
 
