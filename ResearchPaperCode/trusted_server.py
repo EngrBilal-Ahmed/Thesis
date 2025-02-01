@@ -113,5 +113,5 @@ def reset_login_attempts(IDi):
 # Start the Flask application
 if __name__ == '__main__':
     # Run the Flask app on localhost at port 5000
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='192.168.0.104', port=5000, debug=True)
 #     main()  # Start the simulation
