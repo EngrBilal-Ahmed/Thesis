@@ -221,7 +221,7 @@ def main():
 
     # Step 3: Authentication with the Medical Server
     print("\nContacting the Medical Server for Authentication...")
-    authentication_url = "http://192.168.0.104:5001/authenticate"  # Medical server's authentication endpoint
+    authentication_url = "http://192.168.0.106:5001/authenticate"  # Medical server's authentication endpoint
     authentication_data = {
         "Authut": Authut,
         "smart_card": smart_card,
