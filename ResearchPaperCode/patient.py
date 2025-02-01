@@ -196,7 +196,7 @@ def main():
     print("\nContacting the Trusted Server for Registration...")
     start_time = time.time()
 
-    registration_url = "http://127.0.0.1:5000/register" # Trusted server's registration endpoint
+    registration_url = "http://192.168.0.104:5000/register" # Trusted server's registration endpoint
     registration_data = {
         "IDi": IDi,
         "pwi": pwi,
@@ -221,7 +221,7 @@ def main():
 
     # Step 3: Authentication with the Medical Server
     print("\nContacting the Medical Server for Authentication...")
-    authentication_url = "http://127.0.0.1:5001/authenticate"  # Medical server's authentication endpoint
+    authentication_url = "http://192.168.0.104:5001/authenticate"  # Medical server's authentication endpoint
     authentication_data = {
         "Authut": Authut,
         "smart_card": smart_card,
