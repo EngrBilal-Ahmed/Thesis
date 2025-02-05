@@ -54,7 +54,7 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):
     cpu_usage, memory_usage = monitor_resources()
 
     if users_db[IDi]["login_attempts"] >= MAX_LOGIN_ATTEMPTS:
-        messagebox.showerror("Error", f"Account locked due to too many failed login attempts for user: {IDi}")
+        show_error_popup(f"Account locked due to too many failed login attempts for user: {IDi}")
         return None
 
     start_time = time.time()
@@ -72,7 +72,7 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):
 
     if dist == -1 or dist > threshold:
         users_db[IDi]["login_attempts"] += 1
-        messagebox.showerror("Error", f"Biometric check failed. Hamming distance: {dist}")
+        show_error_popup(f"Biometric check failed. Hamming distance: {dist}")
         return None
 
     users_db[IDi]["login_attempts"] = 0
@@ -99,7 +99,7 @@ def login(IDi, pwi, biometric_data, smart_card, threshold=200):
         f"Authentication Key (Authut): {Authut}"
     )
 
-    messagebox.showinfo("Login Successful", login_info)
+    show_info_popup("Login Successful", login_info)
 
     return Authut
 
@@ -112,7 +112,7 @@ def register_user():
 
     # Check if the user already exists in the users_db
     if IDi in users_db:
-        messagebox.showerror("Error", f"User ID '{IDi}' already exists. Please choose a different ID.")
+        show_error_popup(f"User ID '{IDi}' already exists. Please choose a different ID.")
         return
 
     # If user does not exist, proceed with registration
@@ -125,7 +125,7 @@ def register_user():
 
     response = requests.post(registration_url, json=registration_data)
     if response.status_code != 200:
-        messagebox.showerror("Error", f"Registration failed: {response.text}")
+        show_error_popup(f"Registration failed: {response.text}")
     else:
         smart_card = response.json()
         # Save this user to the local database (users_db) to prevent future duplicates
@@ -134,7 +134,39 @@ def register_user():
             "biometric_data": biometric_data,
             "login_attempts": 0  # Reset login attempts to 0 for the new user
         }
-        messagebox.showinfo("Success", f"Registration successful!\nSmart Card Data: {smart_card}")
+        show_info_popup("Success", f"Registration successful!\nSmart Card Data: {smart_card}")
+
+
+# Custom function to show an error popup
+def show_error_popup(message):
+    error_popup = tk.Toplevel(root)
+    error_popup.title("Error")
+    error_popup.geometry("300x150")
+    error_popup.config(bg="#f8d7da")
+
+    label = tk.Label(error_popup, text=message, font=("Arial", 12), fg="red", bg="#f8d7da", wraplength=250)
+    label.pack(pady=20)
+
+    button = ttk.Button(error_popup, text="OK", command=error_popup.destroy)
+    button.pack()
+
+    error_popup.mainloop()
+
+
+# Custom function to show an info popup
+def show_info_popup(title, message):
+    info_popup = tk.Toplevel(root)
+    info_popup.title(title)
+    info_popup.geometry("400x200")
+    info_popup.config(bg="#d4edda")
+
+    label = tk.Label(info_popup, text=message, font=("Arial", 12), fg="green", bg="#d4edda", wraplength=350)
+    label.pack(pady=20)
+
+    button = ttk.Button(info_popup, text="OK", command=info_popup.destroy)
+    button.pack()
+
+    info_popup.mainloop()
 
 
 def authenticate_user():
@@ -144,24 +176,24 @@ def authenticate_user():
 
     # Check if the user ID exists in the users_db
     if IDi not in users_db:
-        messagebox.showerror("Error", f"User ID '{IDi}' does not exist. Please check the ID.")
+        show_error_popup(f"User ID '{IDi}' does not exist. Please check the ID.")
         return
 
     # Check if the password is correct
     if users_db[IDi]["password"] != simple_hash(pwi):
         users_db[IDi]["login_attempts"] += 1
-        messagebox.showerror("Error", "Incorrect password.")
+        show_error_popup("Incorrect password.")
         return
 
     # Check if the biometric data is correct
     if users_db[IDi]["biometric_data"] != biometric_data:
         users_db[IDi]["login_attempts"] += 1
-        messagebox.showerror("Error", "Incorrect biometric data.")
+        show_error_popup("Incorrect biometric data.")
         return
 
     # Check if the user has exceeded the max login attempts
     if users_db[IDi]["login_attempts"] >= MAX_LOGIN_ATTEMPTS:
-        messagebox.showerror("Error", f"Account locked due to too many failed login attempts for user: {IDi}")
+        show_error_popup(f"Account locked due to too many failed login attempts for user: {IDi}")
         return
 
     registration_url = "http://localhost:5000/register"
@@ -174,7 +206,7 @@ def authenticate_user():
     # Perform registration (if needed)
     response = requests.post(registration_url, json=registration_data)
     if response.status_code != 200:
-        messagebox.showerror("Error", "Registration failed.")
+        show_error_popup("Registration failed.")
         return
 
     smart_card = response.json()
@@ -192,9 +224,9 @@ def authenticate_user():
 
         if response.status_code == 200:
             session_key = response.json().get("session_key")
-            messagebox.showinfo("Authentication Successful", f"Session Key: {session_key}")
+            show_info_popup("Authentication Successful", f"Session Key: {session_key}")
         else:
-            messagebox.showerror("Error", f"Authentication failed: {response.text}")
+            show_error_popup(f"Authentication failed: {response.text}")
 
 
 # GUI Setup
