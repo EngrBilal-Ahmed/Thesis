@@ -286,6 +286,11 @@ def authenticate_user():
         show_error_popup(f"User ID '{IDi}' does not exist. Please check the ID.")
         return
 
+    # Check if the user has exceeded the max login attempts
+    if users_db[IDi]["login_attempts"] >= MAX_LOGIN_ATTEMPTS:
+        show_error_popup(f"Account locked due to too many failed login attempts for user: {IDi}")
+        return
+
     # Check if the password is correct
     if users_db[IDi]["password"] != simple_hash(pwi):
         users_db[IDi]["login_attempts"] += 1
@@ -296,11 +301,6 @@ def authenticate_user():
     if users_db[IDi]["biometric_data"] != biometric_data:
         users_db[IDi]["login_attempts"] += 1
         show_error_popup("Incorrect biometric data.")
-        return
-
-    # Check if the user has exceeded the max login attempts
-    if users_db[IDi]["login_attempts"] >= MAX_LOGIN_ATTEMPTS:
-        show_error_popup(f"Account locked due to too many failed login attempts for user: {IDi}")
         return
 
     registration_url = "http://localhost:5000/register"
