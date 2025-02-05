@@ -207,7 +207,7 @@ def register_user():
             "biometric_data": biometric_data,
             "login_attempts": 0  # Reset login attempts to 0 for the new user
         }
-        show_info_popup("Success", f"Registration successful!\nSmart Card Data: {smart_card}")
+        show_info_popup("Success", f"Registration successful!\n\nSmart Card Data: {smart_card}")
 
 
 # Custom function to show an error popup
@@ -229,7 +229,7 @@ def show_error_popup(message):
     error_popup.geometry("300x150")
     error_popup.config(bg="#f8d7da")
 
-    label = tk.Label(error_popup, text=message, font=("Arial", 12), fg="red", bg="#f8d7da", wraplength=250)
+    label = tk.Label(error_popup, text=message, font=("Segoe UI", 12), fg="red", bg="#f8d7da", wraplength=250)
     label.pack(pady=20)
 
     button = ttk.Button(error_popup, text="OK", command=error_popup.destroy)
@@ -255,10 +255,10 @@ def show_info_popup(title, message):
     """
     info_popup = tk.Toplevel(root)
     info_popup.title(title)
-    info_popup.geometry("400x200")
+    info_popup.geometry("650x240")
     info_popup.config(bg="#d4edda")
 
-    label = tk.Label(info_popup, text=message, font=("Arial", 12), fg="green", bg="#d4edda", wraplength=350)
+    label = tk.Label(info_popup, text=message, font=("Segoe UI", 12), fg="green", bg="#d4edda", wraplength=600)
     label.pack(pady=20)
 
     button = ttk.Button(info_popup, text="OK", command=info_popup.destroy)
@@ -338,56 +338,56 @@ def authenticate_user():
 
 # GUI Setup
 root = tk.Tk()
-root.title("Patient Authentication")
-root.geometry("600x600")
+root.title("Patient Registration & Authentication")
+root.geometry("540x420")
 root.configure(bg="#f0f0f0")
-#root.iconbitmap("app_icon.ico")  # Add your own icon here if needed
+root.iconbitmap("icon.ico")
 
 # Create a frame for styling
 frame = tk.Frame(root, bg="#ffffff", bd=2, relief="solid")
-frame.pack(padx=30, pady=30, fill="both", expand=True)
+frame.pack(padx=5, pady=5, anchor="center" )
 
 # Title Label
-title_label = tk.Label(frame, text="Patient Authentication", font=("Arial", 18, "bold"), fg="#4CAF50", bg="#ffffff")
-title_label.grid(row=0, columnspan=2, pady=20)
+title_label = tk.Label(frame, text="Patient Registration & Authentication", font=("Segoe UI", 18, "bold"), fg="#505050", bg="#ffffff")
+title_label.grid(row=0, column=0, columnspan=2, padx=45, pady=20, sticky="ew")
 
 # Register Section
-label_register_id = tk.Label(frame, text="User ID:", font=("Arial", 12), bg="#ffffff")
-label_register_id.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-entry_register_id = ttk.Entry(frame, font=("Arial", 12), width=25)
-entry_register_id.grid(row=1, column=1, padx=10, pady=10, sticky="w")
+label_register_id = tk.Label(frame, text="User ID:", font=("Segoe UI", 12), bg="#ffffff")
+label_register_id.grid(row=1, column=0, padx=10, pady=4, sticky="w")
+entry_register_id = ttk.Entry(frame, font=("Segoe UI", 12), width=25)
+entry_register_id.grid(row=1, column=1, padx=10, pady=4, sticky="w")
 
-label_register_password = tk.Label(frame, text="Password:", font=("Arial", 12), bg="#ffffff")
-label_register_password.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-entry_register_password = ttk.Entry(frame, show="*", font=("Arial", 12), width=25)
-entry_register_password.grid(row=2, column=1, padx=10, pady=10, sticky="w")
+label_register_password = tk.Label(frame, text="Password:", font=("Segoe UI", 12), bg="#ffffff")
+label_register_password.grid(row=2, column=0, padx=10, pady=4, sticky="w")
+entry_register_password = ttk.Entry(frame, show="*", font=("Segoe UI", 12), width=25)
+entry_register_password.grid(row=2, column=1, padx=10, pady=4, sticky="w")
 
-label_register_biometric_data = tk.Label(frame, text="Biometric Data:", font=("Arial", 12), bg="#ffffff")
-label_register_biometric_data.grid(row=3, column=0, padx=10, pady=10, sticky="w")
-entry_register_biometric_data = ttk.Entry(frame, font=("Arial", 12), width=25)
-entry_register_biometric_data.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+label_register_biometric_data = tk.Label(frame, text="Simulated Biometric Data:", font=("Segoe UI", 12), bg="#ffffff")
+label_register_biometric_data.grid(row=3, column=0, padx=10, pady=4, sticky="w")
+entry_register_biometric_data = ttk.Entry(frame, font=("Segoe UI", 12), width=25)
+entry_register_biometric_data.grid(row=3, column=1, padx=10, pady=4, sticky="w")
 
 register_button = ttk.Button(frame, text="Register", command=register_user, width=20, style="TButton")
-register_button.grid(row=4, columnspan=2, pady=20)
+register_button.grid(row=4, columnspan=2, padx=45, pady=15, sticky="e")
 
 # Login Section
-label_login_id = tk.Label(frame, text="User ID:", font=("Arial", 12), bg="#ffffff")
-label_login_id.grid(row=5, column=0, padx=10, pady=10, sticky="w")
-entry_login_id = ttk.Entry(frame, font=("Arial", 12), width=25)
-entry_login_id.grid(row=5, column=1, padx=10, pady=10, sticky="w")
+label_login_id = tk.Label(frame, text="User ID:", font=("Segoe UI", 12), bg="#ffffff")
+label_login_id.grid(row=5, column=0, padx=10, pady=4, sticky="w")
+entry_login_id = ttk.Entry(frame, font=("Segoe UI", 12), width=25)
+entry_login_id.grid(row=5, column=1, padx=10, pady=4, sticky="w")
 
-label_login_password = tk.Label(frame, text="Password:", font=("Arial", 12), bg="#ffffff")
-label_login_password.grid(row=6, column=0, padx=10, pady=10, sticky="w")
-entry_login_password = ttk.Entry(frame, show="*", font=("Arial", 12), width=25)
-entry_login_password.grid(row=6, column=1, padx=10, pady=10, sticky="w")
+label_login_password = tk.Label(frame, text="Password:", font=("Segoe UI", 12), bg="#ffffff")
+label_login_password.grid(row=6, column=0, padx=10, pady=4, sticky="w")
+entry_login_password = ttk.Entry(frame, show="*", font=("Segoe UI", 12), width=25)
+entry_login_password.grid(row=6, column=1, padx=10, pady=4, sticky="w")
 
-label_login_biometric_data = tk.Label(frame, text="Biometric Data:", font=("Arial", 12), bg="#ffffff")
-label_login_biometric_data.grid(row=7, column=0, padx=10, pady=10, sticky="w")
-entry_login_biometric_data = ttk.Entry(frame, font=("Arial", 12), width=25)
-entry_login_biometric_data.grid(row=7, column=1, padx=10, pady=10, sticky="w")
+label_login_biometric_data = tk.Label(frame, text="Biometric Data:", font=("Segoe UI", 12), bg="#ffffff")
+label_login_biometric_data.grid(row=7, column=0, padx=10, pady=4, sticky="w")
+entry_login_biometric_data = ttk.Entry(frame, font=("Segoe UI", 12), width=25)
+entry_login_biometric_data.grid(row=7, column=1, padx=10, pady=4, sticky="w")
 
 login_button = ttk.Button(frame, text="Login", command=authenticate_user, width=20, style="TButton")
-login_button.grid(row=8, columnspan=2, pady=20)
+login_button.grid(row=8, columnspan=2, padx=45, pady=15, sticky="e")
 
 # Run the main window loop
 root.mainloop()
