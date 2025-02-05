@@ -345,10 +345,11 @@ root.iconbitmap("icon.ico")
 
 # Create a frame for styling
 frame = tk.Frame(root, bg="#ffffff", bd=2, relief="solid")
-frame.pack(padx=5, pady=5, anchor="center" )
+frame.pack(padx=5, pady=5, anchor="center")
 
 # Title Label
-title_label = tk.Label(frame, text="Patient Registration & Authentication", font=("Segoe UI", 18, "bold"), fg="#505050", bg="#ffffff")
+title_label = tk.Label(frame, text="Patient Registration & Authentication", font=("Segoe UI", 18, "bold"), fg="#505050",
+                       bg="#ffffff")
 title_label.grid(row=0, column=0, columnspan=2, padx=45, pady=20, sticky="ew")
 
 # Register Section
