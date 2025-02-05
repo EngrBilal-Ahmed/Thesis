@@ -85,4 +85,4 @@ def medical_server_authentication(): #IDi, smart_card, Authut):
 
 # Start the Flask application
 if __name__ == '__main__':
-    app.run(host='192.168.0.106', port=5001, debug=True)
+    app.run(host='localhost', port=5001, debug=True)
