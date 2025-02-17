@@ -1,5 +1,5 @@
 import hashlib  # For generating hashes of data
-import random  # For generating random numbers for masking
+import secrets  # For generating random numbers for masking
 from flask import Flask, request, jsonify  # For creating a Flask web server
 
 # Initialize Flask app
@@ -21,7 +21,7 @@ def generate_random():
     This is used to generate random numbers, which are later used for masking biometric data
     and creating session keys.
     """
-    return random.randint(1, 100000)
+    return secrets.randbelow(1, 100000)
 
 # Simulating a database of users
 users_db = {

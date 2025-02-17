@@ -1,5 +1,5 @@
 import hashlib  # For generating secure hashes of data
-import random  # For generating random values like r1, r2 used in biometric verification
+import secrets  # For generating random values like r1, r2 used in biometric verification
 #from trusted_server import registration  # Import the registration function from the trusted server
 #from medical_server import medical_server_authentication  # Import the authentication function from the medical server
 import time  # For simulating real-time delays in processing
@@ -40,7 +40,7 @@ def hamming_distance(str1, str2):
         return -1  # Return -1 if the strings are not the same length
     return sum(el1 != el2 for el1, el2 in zip(str1, str2))  # Count differing bits
 
-# Random number generator for creating random integers
+# Random number generator for creating random integers with high entropy
 def generate_random():
     """
     Generates a random integer between 1 and 100,000.
@@ -48,7 +48,7 @@ def generate_random():
     Returns:
     int: A random integer.
     """
-    return random.randint(1, 100000)
+    return secrets.randbelow(1, 100000)
 
 
 # Simulating a user database with login attempts

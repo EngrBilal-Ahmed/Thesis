@@ -1,5 +1,5 @@
 import hashlib  # For generating cryptographic hashes
-import random  # For generating random values used in session creation
+import secrets  # For generating random values used in session creation
 from flask import Flask, request, jsonify  # For creating a Flask web server
 
 # Initialize Flask app
@@ -22,7 +22,7 @@ def generate_random():
     The random integer is used in various cryptographic operations
     to create unique values, including session keys and temporary data.
     """
-    return random.randint(1, 100000)
+    return secrets.randbelow(1, 100000)
 
 
 
