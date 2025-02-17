@@ -22,7 +22,7 @@ def generate_random():
     The random integer is used in various cryptographic operations
     to create unique values, including session keys and temporary data.
     """
-    return secrets.randbelow(1, 100000)
+    return secrets.randbelow(100000)
 
 
 

@@ -48,7 +48,7 @@ def generate_random():
     Returns:
     int: A random integer.
     """
-    return secrets.randbelow(1, 100000)
+    return secrets.randbelow(100000)
 
 
 # Simulating a user database with login attempts

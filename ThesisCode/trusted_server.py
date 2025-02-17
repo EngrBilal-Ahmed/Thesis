@@ -21,7 +21,7 @@ def generate_random():
     This is used to generate random numbers, which are later used for masking biometric data
     and creating session keys.
     """
-    return secrets.randbelow(1, 100000)
+    return secrets.randbelow(100000)
 
 # Simulating a database of users
 users_db = {

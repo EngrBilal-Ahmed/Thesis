@@ -36,7 +36,7 @@ def generate_random():
     Returns:
         int: A random integer between 1 and 100,000.
     """
-    return secrets.randbelow(1, 100000)
+    return secrets.randbelow(100000)
 
 
 # Simulated user database for login (this could be replaced by a real database)
